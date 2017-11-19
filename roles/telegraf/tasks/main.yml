@@ -1,0 +1,29 @@
+---
+
+- name: create influx yum repository
+  yum_repository:
+    name: influx
+    description: influx
+    baseurl: https://repos.influxdata.com/rhel/$releasever/$basearch/stable
+    gpgkey: https://repos.influxdata.com/influxdb.key
+    gpgcheck: yes
+    sslverify: yes
+
+- name: install telegraf
+  yum:
+    name: telegraf
+    state: present
+
+- name: fixup telegraf.conf
+  replace:
+    path: /etc/telegraf/telegraf.conf
+    regexp: 'urls = \["http://localhost:8086"\]'
+    replace: 'urls = ["{{ influx.proto }}://{{ influx.host }}:{{ influx.port }}"]'
+    backup: yes
+  notify: restart-telegraf
+
+- name: start and enable telegraf
+  service:
+    name: telegraf
+    state: started
+    enabled: yes

@@ -1,0 +1,19 @@
+---
+
+- hosts: tickstack
+  roles:
+    - tickstack
+    - grafana
+  become: yes
+
+- hosts:
+    - minecraft
+    - minecraft2
+  roles:
+    - telegraf
+  vars:
+    influx:
+      proto: http
+      host: tickstack
+      port: 8086
+  become: yes

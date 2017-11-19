@@ -1,0 +1,40 @@
+---
+
+- name: create influx yum repository
+  yum_repository:
+    name: influx
+    description: influx
+    baseurl: https://repos.influxdata.com/rhel/$releasever/$basearch/stable
+    gpgkey: https://repos.influxdata.com/influxdb.key
+    gpgcheck: yes
+    sslverify: yes
+
+- name: install tickstack components
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - influxdb
+    - telegraf
+    - kapacitor
+    - chronograf
+
+- name: start and enable tickstack
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - influxdb
+    - telegraf
+    - kapacitor
+    - chronograf
+
+- name: punch holes in the firewall
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+    - 8888/tcp
+    - 8086/tcp
