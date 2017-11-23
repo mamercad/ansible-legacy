@@ -38,3 +38,4 @@
   with_items:
     - 8888/tcp
     - 8086/tcp
+  notify: reload-firewalld
