@@ -1,19 +1,20 @@
 ---
 
-- hosts: prometheus
+- hosts: linux
   roles:
     - prometheus
-    - grafana
   vars:
     prometheus:
       topdir: /opt/prometheus
       tarball: https://github.com/prometheus/prometheus/releases/download/v2.0.0/prometheus-2.0.0.linux-amd64.tar.gz
       basename: prometheus-2.0.0.linux-amd64.tar.gz
+      dirbasename: prometheus-2.0.0.linux-amd64
       sha256sum: e12917b25b32980daee0e9cf879d9ec197e2893924bd1574604eb0f550034d46
       portproto: 9090/tcp
       node_exporter:
         tarball: https://github.com/prometheus/node_exporter/releases/download/v0.15.1/node_exporter-0.15.1.linux-amd64.tar.gz
         basename: node_exporter-0.15.1.linux-amd64.tar.gz
+        dirbasename: node_exporter-0.15.1.linux-amd64
         sha256sum: 7ffb3773abb71dd2b2119c5f6a7a0dbca0cff34b24b2ced9e01d9897df61a127
         portproto: 9100/tcp
   become: yes

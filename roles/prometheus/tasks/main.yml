@@ -9,6 +9,7 @@
     mode: 0755
   tags:
     - prometheus
+    - prometheus_node_exporter
 
 - name: fetch prometheus
   get_url:
@@ -24,6 +25,7 @@
   unarchive:
     src: "{{ prometheus.topdir }}/{{ prometheus.basename }}"
     dest: "{{ prometheus.topdir }}"
+    creates: "{{ prometheus.topdir }}/{{ prometheus.dirbasename }}"
     remote_src: yes
   tags:
     - prometheus
@@ -37,16 +39,17 @@
   tags:
     - prometheus
     - fetch
-    - node_exporter
+    - prometheus_node_exporter
 
 - name: extract prometheus node_exporter
   unarchive:
     src: "{{ prometheus.topdir }}/{{ prometheus.node_exporter.basename }}"
     dest: "{{ prometheus.topdir }}"
+    creates: "{{ prometheus.topdir }}/{{ prometheus.node_exporter.dirbasename }}"
     remote_src: yes
   tags:
     - prometheus
-    - node_exporter
+    - prometheus_node_exporter
 
 - name: punch holes in the firewall (prometheus)
   firewalld:
@@ -65,4 +68,3 @@
   notify: reload-firewalld
   tags:
     - prometheus
-    - node_exporter

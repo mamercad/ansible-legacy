@@ -2,5 +2,12 @@
 
 - hosts: all
   roles:
-    - common
+    - site
+  vars:
+    users:
+      - name: mark
+        comment: Mark Mercado
+        authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDVb/uHW+ojQW5fCxvgrtUP0/23drtSq7Fu5Ah1j8eLf0eBn3oq1evJ6/HwtuTwRHuRWxBmu78L1KtU627Sfc3yxTIo3pma+l2wbF1b4ktl/EhsXOD9P25W2BsrMcgn4gr/fWwmtek/hGxP2riOJzjjNEuqQ+5gQXkSNddIjXq1XPpGzCHNHLp+IHLDZ+rfKN97Znsznsg2z1FvRGD94eh8j2gH/x1M6vLMKq5I67R5SMq8QVfzlqJENK+CrBMtLGb5PDWFtdhfoS/gkxW8+rQs4D1l9vikbjUV11az4xiStR/m4KA37SjxYA2X5Nv/6FAKM8AYwL/vmQzpp+HT6Quh mark@MARK
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDlrFyD+4sSozT98uuBRxDVLmoPs+hDnzmMKnWInLHJxpWi+4QXZy1Rphp+1kwy2vPtFFb6MY8TbAQXH1hTsS9emECVXwPIfr7RLR2/kVUYZJ1IoxFHhVzOkXdwx5qRGz2ll3bKLc6n0YyQmQDveEiZkTzzdIvNjodolDk9z    G+H2LOXoU087bDwDku+7KaBveWen/ufRPzEdtB7PJrmUAEoANC6ZrfI9Jlg9ZVN+IzSHidpwBDplzcjqJDXpc+X63MKonFWNzEUmQpK    fdMxZfkV30ybaCIu5irJtybuPnIXoH55qbdvHCmAwhEoD29AlZlAbj/fX2KRaNwRJGuYO5f mark@rockstar
   become: yes
