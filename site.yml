@@ -1,19 +1,6 @@
 ---
 
-- hosts: tickstack
+- hosts: all
   roles:
-    - tickstack
-    - grafana
-  become: yes
-
-- hosts:
-    - minecraft
-    - minecraft2
-  roles:
-    - telegraf
-  vars:
-    influx:
-      proto: http
-      host: tickstack
-      port: 8086
+    - common
   become: yes
