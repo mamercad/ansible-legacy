@@ -1,0 +1,68 @@
+---
+
+- name: create prometheus topdir
+  file:
+    name: "{{ prometheus.topdir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  tags:
+    - prometheus
+
+- name: fetch prometheus
+  get_url:
+    url: "{{ prometheus.tarball }}"
+    sha256sum: "{{ prometheus.sha256sum }}"
+    dest: "{{ prometheus.topdir }}"
+    mode: 0644
+  tags:
+    - prometheus
+    - fetch
+
+- name: extract prometheus
+  unarchive:
+    src: "{{ prometheus.topdir }}/{{ prometheus.basename }}"
+    dest: "{{ prometheus.topdir }}"
+    remote_src: yes
+  tags:
+    - prometheus
+
+- name: fetch prometheus node_exporter
+  get_url:
+    url: "{{ prometheus.node_exporter.tarball }}"
+    sha256sum: "{{ prometheus.node_exporter.sha256sum }}"
+    dest: "{{ prometheus.topdir }}"
+    mode: 0644
+  tags:
+    - prometheus
+    - fetch
+    - node_exporter
+
+- name: extract prometheus node_exporter
+  unarchive:
+    src: "{{ prometheus.topdir }}/{{ prometheus.node_exporter.basename }}"
+    dest: "{{ prometheus.topdir }}"
+    remote_src: yes
+  tags:
+    - prometheus
+    - node_exporter
+
+- name: punch holes in the firewall (prometheus)
+  firewalld:
+    port: "{{ prometheus.portproto }}"
+    permanent: true
+    state: enabled
+  notify: reload-firewalld
+  tags:
+    - prometheus
+
+- name: punch holes in the firewall (prometheus node_exporter)
+  firewalld:
+    port: "{{ prometheus.node_exporter.portproto }}"
+    permanent: true
+    state: enabled
+  notify: reload-firewalld
+  tags:
+    - prometheus
+    - node_exporter
