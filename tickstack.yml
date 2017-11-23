@@ -1,0 +1,7 @@
+---
+
+- hosts: tickstack
+  roles:
+    - tickstack
+    - grafana
+  become: yes
