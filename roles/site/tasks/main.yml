@@ -1,0 +1,51 @@
+---
+
+- name: make sure users exist
+  user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    state: present
+  with_items: "{{ users }}"
+
+- name: set up authorized_keys
+  authorized_key:
+    user: "{{ item.0.name }}"
+    state: present
+    key: "{{ item.1 }}"
+  with_subelements:
+    - "{{ users }}"
+    - authorized_keys
+
+- name: determine user home directory
+  #shell: "file ~{{ item.name }}"
+  shell: "su - {{ item.name }} -c 'echo $HOME'"
+  args:
+    warn: false
+  register: homes
+  changed_when: false
+  with_items: "{{ users }}"
+
+- name: clone dotfiles into their homes
+  git:
+    repo: https://github.com/mamercad/dotfiles.git
+    dest: "{{ item.stdout }}/dotfiles"
+    force: yes
+  with_items: "{{ homes.results }}"
+
+- name: deploy dotfiles into their home
+  shell: "su - {{ item.1.name }} -c {{ item.0.stdout }}/dotfiles/shipit.sh"
+  args:
+    warn: false
+  with_together:
+    - "{{ homes.results }}"
+    - "{{ users }}"
+  changed_when: false # lazy, should diff
+
+- name: install packages (centos/rhel)
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - tmux
+    - vim-minimal
+  when: ansible_distribution == "CentOS"
